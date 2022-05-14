@@ -8,7 +8,7 @@ include_once 'includes/header.php';
 
         <input type="text" name="refnum" value="<?php echo isset($_POST['refnum']) ? $_POST['refnum'] : '' ?>" placeholder="Model reference number" style="width: 240px;">
         <br>
-       
+
 
 
         <h4 style="text-align: center;">Validation</h4>
@@ -32,8 +32,7 @@ include_once 'includes/header.php';
         }
         if (isset($_POST['validation'])) {
             if (($_POST['validation']) == "psets") {
-                $type_of_script = "psets.py 2>&1";
-                $type_of_script_guids = "psetsGUIDs.py 2>&1";
+                $type_of_script = "psets_lsts.py 2>&1";
             }
             if (($_POST['validation']) == "qto") {
                 $type_of_script = "qto.py 2>&1";
@@ -51,27 +50,33 @@ include_once 'includes/header.php';
         //echo $outputscript;
 
 
-        $file = "temp/report" . $_POST['refnum'] . trim($type_of_script, "2>&1") . ".txt";
+        /*$file = "temp/report" . $_POST['refnum'] . trim($type_of_script, "2>&1") . ".txt";
         $txt = fopen($file, "w+") or die("Unable to open file!");
         fwrite($txt, "$outputscript");
-        fclose($txt);
+        fclose($txt);*/
 
 
-        $outputscript_guids = (shell_exec("$type_of_script_guids" . $model_py));
+        //$outputscript_guids = (shell_exec("$type_of_script_guids" . $model_py));
         //echo $outputscript_guids;
-        $arr = json_decode($outputscript_guids);
+        $arr = json_decode($outputscript);
 
         $data1 = array();
         foreach ($arr[0] as $data) {
-            array_push($data1, '"'.$data.'"'); 
+            array_push($data1, '"' . $data . '"');
         }
         $data2 = array();
         foreach ($arr[1] as $data) {
-            array_push($data2, '"'.$data.'"'); 
+            array_push($data2, '"' . $data . '"');
         }
+        $data3 = array();
+        foreach ($arr[2] as $data) {
+            foreach($data as $datan) {
+            array_push($data3, '"' . $datan . '"');
+        }}
 
         $elems1 =  implode(',', $data1);
         $elems2 =  implode(',', $data2);
+        $elems3 =  implode('\n', $data3);
         //var_dump($arr[0]);
     }
 
@@ -164,10 +169,10 @@ include_once 'includes/header.php';
         //-------------------------------------------------------------------------------
 
 
-        
+
         // 2
         const ids1 = [<?= $elems1 ?>];
-        viewer.scene.setObjectsColorized(ids1, [1,0,0]);
+        viewer.scene.setObjectsColorized(ids1, [1, 0, 0]);
         const ids2 = [<?= $elems2 ?>];
         viewer.scene.setObjectsXRayed(ids2, true)
     });
@@ -214,21 +219,20 @@ include_once 'includes/header.php';
     // THIS IS THE PART FOR FILE DOWNLOADING //
 
     function download(filename, text) {
-            var element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-            element.setAttribute('download', filename);
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
 
-            element.style.display = 'none';
-            document.body.appendChild(element);
+        element.style.display = 'none';
+        document.body.appendChild(element);
 
-            element.click();
+        element.click();
 
-            document.body.removeChild(element);
-        }
+        document.body.removeChild(element);
+    }
 
-        // Start file download.
-        download("report.txt", '<?= $elems1.$elems2?>');
-
+    // Start file download.
+    download("report.txt", '<?= $elems3 ?>');
 </script>
 
 
