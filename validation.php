@@ -12,9 +12,10 @@ include_once 'includes/header.php';
 
 
         <h4 style="text-align: center;">Validation</h4>
-        <input type="radio" id="psets" name="validation" value="psets" checked> Check for missing Property sets<br>
-        <input type="radio" id="qto" name="validation" value="qto"> Show manual QTO elements <br>
-        <input type="radio" id="reuse" name="validation" value="reuse">Show elements for reuse <br>
+        <input type="radio" id="psets" name="validation" value="psets" checked>Check for missing Property sets<br>
+        <input type="radio" id="arrays" name="validation" value="arrays">Check for inconsistent arrays<br>
+        <input type="radio" id="manualqtos" name="validation" value="manualqtos">Show manually estimated elements<br>
+        <input type="radio" id="reused" name="validation" value="reused">Show elements that can be reused<br>
 
         <button type="submit" name="show" value="show" style="width: 240px;">
             SHOW THE MODEL | RUN
@@ -34,11 +35,14 @@ include_once 'includes/header.php';
             if (($_POST['validation']) == "psets") {
                 $type_of_script = "psets_lsts.py 2>&1";
             }
-            if (($_POST['validation']) == "qto") {
-                $type_of_script = "qto.py 2>&1";
+            if (($_POST['validation']) == "arrays") {
+                $type_of_script = "arrays_lengths.py 2>&1";
             }
-            if (($_POST['validation']) == "reuse") {
-                $type_of_script = "reuse.py 2>&1";
+            if (($_POST['validation']) == "manualqtos") {
+                $type_of_script = "manualqtos.py 2>&1";
+            }
+            if (($_POST['validation']) == "reused") {
+                $type_of_script = "reused_elems.py 2>&1";
             }
         }
         //echo $type_of_script;
@@ -70,9 +74,13 @@ include_once 'includes/header.php';
         }
         $data3 = array();
         foreach ($arr[2] as $data) {
-            foreach($data as $datan) {
-            array_push($data3, '"' . $datan . '"');
-        }}
+            foreach ($data as $datan) {
+                array_push($data3, '"' . $datan . '"');
+            }
+            array_push($data3, '\n');
+        }
+        array_push($data3, 'The list of questioned elements:');
+        array_push($data3, '\n');
 
         $elems1 =  implode(',', $data1);
         $elems2 =  implode(',', $data2);
@@ -232,7 +240,7 @@ include_once 'includes/header.php';
     }
 
     // Start file download.
-    download("report.txt", '<?= $elems3 ?>');
+    download("report.txt", '<?= $elems3, $elems1 ?>');
 </script>
 
 
