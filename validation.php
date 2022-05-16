@@ -24,13 +24,15 @@ include_once 'includes/header.php';
 
     </form>
     <?php
+    
+
     if (isset($_POST['show'])) {
         if ($_POST['refnum'] == "") {
             echo "Please, specify model reference number";
         } else {
             $model = $_POST['refnum'] . ".ifc.xkt";
             $model_py = $_POST['refnum'] . ".ifc";
-        }
+        
         if (isset($_POST['validation'])) {
             if (($_POST['validation']) == "psets") {
                 $type_of_script = "psets_lsts.py 2>&1";
@@ -86,8 +88,8 @@ include_once 'includes/header.php';
         $elems2 =  implode(',', $data2);
         $elems3 =  implode('\n', $data3);
         //var_dump($arr[0]);
-    }
-
+    }}
+    include_once 'parser.php';
     ?>
 
 

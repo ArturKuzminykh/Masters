@@ -21,7 +21,8 @@ session_start();
     
       <nav>
       <ul>
-        <li><a href="index.php">WELCOME TO R-BIM</a></li>
+      <a href="index.php"><img src='img/Logo.jpg' alt='R-BIM logo' style="height:50px;float:left; position:relative; top:7px; left:15px " ></a>
+        
         <li><a href="#">MANUAL</a></li>
         <?php
         if (isset($_SESSION["useruid"])) {
@@ -33,6 +34,7 @@ session_start();
           echo '<li><a href="login.php">LOG IN</a></li>';
         }
         ?>
+        
       </ul>
       </nav>
       <br><br><br>
