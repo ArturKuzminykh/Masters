@@ -21,7 +21,7 @@ session_start();
     
       <nav>
       <ul>
-      <a href="index.php"><img src='img/Logo.jpg' alt='R-BIM logo' style="height:50px;float:left; position:relative; top:7px; left:15px " ></a>
+      <a href="index.php"><img src='img/Logo.jpg' alt='R-BIM logo' style="height:40px;float:left; position:relative; top:10px; left:20px " ></a>
         
         <li><a href="#">MANUAL</a></li>
         <?php

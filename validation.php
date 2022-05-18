@@ -20,11 +20,12 @@ include_once 'includes/header.php';
         <button type="submit" name="show" value="show" style="width: 240px;">
             SHOW THE MODEL | RUN
         </button>
-
+    <br><br>
 
     </form>
+
     <?php
-    
+
 
     if (isset($_POST['show'])) {
         if ($_POST['refnum'] == "") {
@@ -32,63 +33,78 @@ include_once 'includes/header.php';
         } else {
             $model = $_POST['refnum'] . ".ifc.xkt";
             $model_py = $_POST['refnum'] . ".ifc";
-        
-        if (isset($_POST['validation'])) {
-            if (($_POST['validation']) == "psets") {
-                $type_of_script = "psets_lsts.py 2>&1";
-            }
-            if (($_POST['validation']) == "arrays") {
-                $type_of_script = "arrays_lengths.py 2>&1";
-            }
-            if (($_POST['validation']) == "manualqtos") {
-                $type_of_script = "manualqtos.py 2>&1";
-            }
-            if (($_POST['validation']) == "reused") {
-                $type_of_script = "reused_elems.py 2>&1";
-            }
-        }
-        //echo $type_of_script;
-        //echo ("<br>".$model_py);
-        //$command = escapeshellcmd("$type_of_script $model_py");
-        //echo (shell_exec($command));
-        //echo "<br>HI";
-        $outputscript = (shell_exec("$type_of_script" . $model_py));
-        //echo $outputscript;
+            $lat = '59.9389';
+            $long = '30.3157';
+            $reference = 'https://maps.google.com/maps?q=' . $lat . ',' . $long . '&hl=es;z=14&amp;output=embed';
+    ?>
+            <!-- Trigger/Open Pop Up google map -->
+            <button id="myBtn" style="width: 240px;">CHEK PROJECT LOCATION</button><br><br>
 
+    <?php
+            if (isset($_POST['validation'])) {
+                if (($_POST['validation']) == "psets") {
+                    $type_of_script = "psets_lsts.py 2>&1";
+                }
+                if (($_POST['validation']) == "arrays") {
+                    $type_of_script = "arrays_lengths.py 2>&1";
+                }
+                if (($_POST['validation']) == "manualqtos") {
+                    $type_of_script = "manualqtos.py 2>&1";
+                }
+                if (($_POST['validation']) == "reused") {
+                    $type_of_script = "reused_elems.py 2>&1";
+                }
+                
+            }
+            //echo $type_of_script;
+            //echo ("<br>".$model_py);
+            //$command = escapeshellcmd("$type_of_script $model_py");
+            //echo (shell_exec($command));
+            //echo "<br>HI";
+            $outputscript = (shell_exec("$type_of_script" . $model_py));
+            //echo $outputscript;
 
-        /*$file = "temp/report" . $_POST['refnum'] . trim($type_of_script, "2>&1") . ".txt";
+            // CALCULATING THE LOCATION AND PUSHING THE VALUES TO GOOGLE MAPS
+            $location = (shell_exec("location.py 2>&1" . $model_py));
+            $coords = json_decode($location);
+            $lat = $coords[0];
+            $long = $coords[1];
+            $reference = 'https://maps.google.com/maps?q=' . $lat . ',' . $long . '&hl=es;z=14&amp;output=embed';
+
+            /*$file = "temp/report" . $_POST['refnum'] . trim($type_of_script, "2>&1") . ".txt";
         $txt = fopen($file, "w+") or die("Unable to open file!");
         fwrite($txt, "$outputscript");
         fclose($txt);*/
 
 
-        //$outputscript_guids = (shell_exec("$type_of_script_guids" . $model_py));
-        //echo $outputscript_guids;
-        $arr = json_decode($outputscript);
+            //$outputscript_guids = (shell_exec("$type_of_script_guids" . $model_py));
+            //echo $outputscript_guids;
+            $arr = json_decode($outputscript);
 
-        $data1 = array();
-        foreach ($arr[0] as $data) {
-            array_push($data1, '"' . $data . '"');
-        }
-        $data2 = array();
-        foreach ($arr[1] as $data) {
-            array_push($data2, '"' . $data . '"');
-        }
-        $data3 = array();
-        foreach ($arr[2] as $data) {
-            foreach ($data as $datan) {
-                array_push($data3, '"' . $datan . '"');
+            $data1 = array();
+            foreach ($arr[0] as $data) {
+                array_push($data1, '"' . $data . '"');
             }
+            $data2 = array();
+            foreach ($arr[1] as $data) {
+                array_push($data2, '"' . $data . '"');
+            }
+            $data3 = array();
+            foreach ($arr[2] as $data) {
+                foreach ($data as $datan) {
+                    array_push($data3, '"' . $datan . '"');
+                }
+                array_push($data3, '\n');
+            }
+            array_push($data3, 'The list of questioned elements:');
             array_push($data3, '\n');
-        }
-        array_push($data3, 'The list of questioned elements:');
-        array_push($data3, '\n');
 
-        $elems1 =  implode(',', $data1);
-        $elems2 =  implode(',', $data2);
-        $elems3 =  implode('\n', $data3);
-        //var_dump($arr[0]);
-    }}
+            $elems1 =  implode(',', $data1);
+            $elems2 =  implode(',', $data2);
+            $elems3 =  implode('\n', $data3);
+            //var_dump($arr[0]);
+        }
+    }
     include_once 'parser.php';
     ?>
 
@@ -243,6 +259,35 @@ include_once 'includes/header.php';
 
     // Start file download.
     download("report.txt", '<?= $elems3, $elems1 ?>');
+
+
+
+    // PART OF POP_UP GOOGLE MAP LOCATION
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>
 
 
@@ -252,6 +297,19 @@ include_once 'includes/header.php';
 </div>
 <div id="time">Loading JavaScript modules...</div>
 
+
+<!-- POP UP CONTENT -->
+<div id="myModal" class="modal">
+
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p style="text-align:center;"><b>Your project location is:</b></p><br>
+        <div class="map">
+            <iframe width="450" height="450" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="<?= $reference ?>"></iframe>
+        </div>
+    </div>
+
+</div>
 
 
 

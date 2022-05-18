@@ -1,4 +1,3 @@
-<br>
 <h4 style="text-align: center;">Project information</h4>
 <form method="POST">
     <input type="text" name="reference" value="<?php echo (isset($_POST['refnum']) ? $_POST['refnum'] : '') ?>" placeholder="Model reference number" style="width: 240px;">
@@ -30,10 +29,11 @@
 
     <label for="pr_start">Demolition start date:</label><br>
     <input type="date" id="pr_start" name="pr_start" value="2022-07-17" min="2022-07-17" max="2099-12-31"><br>
-
-    <label for="declare">I am informed and agree with: </label><br>
     <sub><input type="checkbox" id="declare" name="declare" value="declare"></sub>
-    <sub>The elements that did not pass validation will not be processed. The model will be sent to the market </sub>
+    <label for="declare">I am informed and agree with: </label>
+
+    <br>
+    <sub>- The elements that did not pass validation will not be processed. <br> - The location of the project is correct. <br> - The model will be sent to the market </sub>
 
     <a href="index.php">
         <button type="submit" name="pr_send" value="pr_send" style="width: 240px;">
@@ -54,6 +54,7 @@ if (isset($_POST['pr_send'])) {
     $data4 = $_POST['pr_docs'];
     $data5 = $_POST['pr_start'];
     $data6 = $_SESSION["useruid"];
+    $model_py = $_POST['reference'] . ".ifc";
 
     if (empty($data4)) {
         $data4 = "None";
@@ -67,16 +68,16 @@ if (isset($_POST['pr_send'])) {
 
         exit();
     }
-    
-    $outputscript = (shell_exec("dbinsert.py 2>&1". $data1. " ".$data2." ".$data3." ".$data4." ".$data5." ".$data6));
-    //print_r($outputscript);
+
+    $outputscript = (shell_exec("dbinsert.py 2>&1" . $data1 . " " . $data2 . " " . $data3 . " " . $data4 . " " . $data5 . " " . $data6 . " " . $model_py));
+    // print_r($outputscript);
     // echo $data1."<br>";
     // echo $data2."<br>";
     // echo $data3."<br>";
     // echo $data4."<br>";
     // echo $data5."<br>";
 
-    ?>
+?>
 
     <script type="text/javascript">
         window.location = "datasent.php";
