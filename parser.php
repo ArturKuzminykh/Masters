@@ -56,6 +56,10 @@ if (isset($_POST['pr_send'])) {
     $data6 = $_SESSION["useruid"];
     $model_py = $_POST['reference'] . ".ifc";
 
+
+    require_once 'includes/dbh.inc.php';
+    require_once 'includes/functions.inc.php';
+
     if (empty($data4)) {
         $data4 = "None";
     }
@@ -68,6 +72,10 @@ if (isset($_POST['pr_send'])) {
 
         exit();
     }
+    if (refExists ($conn, $data1)) {
+        header("location: validation.php?error=referenceexists");
+        exit();
+    }
 
     $outputscript = (shell_exec("dbinsert.py 2>&1" . $data1 . " " . $data2 . " " . $data3 . " " . $data4 . " " . $data5 . " " . $data6 . " " . $model_py));
     // print_r($outputscript);
@@ -76,7 +84,7 @@ if (isset($_POST['pr_send'])) {
     // echo $data3."<br>";
     // echo $data4."<br>";
     // echo $data5."<br>";
-
+    $preparespecification = (shell_exec("dbelementsparse.py 2>&1" . $model_py));
 ?>
 
     <script type="text/javascript">
@@ -84,5 +92,6 @@ if (isset($_POST['pr_send'])) {
     </script>
 
 <?php
+
 }
 ?>
