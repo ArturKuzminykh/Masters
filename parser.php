@@ -1,3 +1,4 @@
+
 <h4 style="text-align: center;">Project information</h4>
 <form method="POST">
     <input type="text" name="reference" value="<?php echo (isset($_POST['refnum']) ? $_POST['refnum'] : '') ?>" placeholder="Model reference number" style="width: 240px;">
@@ -55,7 +56,8 @@ if (isset($_POST['pr_send'])) {
     $data5 = $_POST['pr_start'];
     $data6 = $_SESSION["useruid"];
     $model_py = $_POST['reference'] . ".ifc";
-
+    
+    $_SESSION['reference'] = $data1;
 
     require_once 'includes/dbh.inc.php';
     require_once 'includes/functions.inc.php';
