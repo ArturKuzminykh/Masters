@@ -22,6 +22,19 @@
                         $file_name_new = uniqid('',true);  //Creates new unique name of file
                         $file_name_new_ext = $file_name_new.'.'. $file_actual_ext;
                         $file_dest = 'uploads/'.$file_name_new_ext;
+
+                        //Create directory with images
+                        $foldername =  'uploads/'.$file_name_new;
+                        mkdir($foldername);
+                        foreach($_FILES['files']['name'] as $i => $name){
+  		                if(strlen($_FILES['files']['name'][$i]) > 1){  
+                        move_uploaded_file($_FILES['files']['tmp_name'][$i],$foldername."/".$name);
+  		                }}
+
+
+
+
+
                         move_uploaded_file($file_tempname, $file_dest);
                         //header('Location: index.php?uploadsuccess');
                         echo "Your file reference is: ".$file_name_new;

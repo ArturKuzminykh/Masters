@@ -5,6 +5,8 @@ include_once 'includes/header.php'
     <form method="POST" enctype="multipart/form-data">
         <h4 style="text-align: center;">Upload your model (IFC file)</h4>
         <input type="file" name="file">
+        <h4 style="text-align: center;">with images folder</h4>
+        <input type="file" name="files[]" id="files" multiple directory="" webkitdirectory="" moxdirectory="" />
         <br>
         <button type="submit" name="submit" style="width: 240px;">UPLOAD</button>
     </form>

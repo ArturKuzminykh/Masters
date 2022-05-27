@@ -32,7 +32,7 @@ def get_p_fromPset(pset, pname):
     if p!= None:
         return str(p)
     else:
-        return " "
+        return " test "
 
 for i in range(len(present_classes)):
     short_name = "Qto_" + present_classes[i][3:] + "BaseQuantities"
@@ -107,18 +107,24 @@ for i in range(len(bld_elems)):
                     quantity = 0
 
             referenceInModel = elem.GlobalId
-            documentation = "test"
-            if quantity != 0:
+            documentation_image = pset_recycle.get("Image")
+            if documentation_image != None:
+                documentation_image = documentation_image[14:]
+            else:
+                documentation_image = "No image"
+
+            if quantity != 0 and declaredQuantityPerUnit != None and materialQuantityPerDeclaredUnit != None:
                 tot_qt = [str("{:.2f}".format(float(i)*quantity/float(declaredQuantityPerUnit))) for i in materialQuantityPerDeclaredUnit.split(',')]
                 tot_qt_str = ",".join(tot_qt)
-                print(tot_qt_str)
+                
                 quantity = str(quantity)
 
 
-                sqlquery = 'insert into projectbuildingobjects(objectClass,typeName, declaredUnit,declaredQuantityPerUnit,materialCompounPerDeclareUnit,materialQuantityPerDeclaredUnit,canBeRecycled,canBeReused,hasPotentialDanger,requiresIndoorStorage, typeOfJoints, quantity, referenceInModel,documentation, totalQuantityOfMaterials, modelReference) values ("' + objectClass + '","' + typeName + '","' + declaredUnit + '","' + declaredQuantityPerUnit + '","' + materialCompounPerDeclareUnit + '","' + materialQuantityPerDeclaredUnit + '","' + canBeRecycled + '","' + canBeReused + '","' + hasPotentialDanger + '","' + requiresIndoorStorage + '","' + typeOfJoints + '","' + quantity + '","' + referenceInModel + '","' + documentation + '","' + tot_qt_str + '","' + model_reference + '") '
+                sqlquery = 'insert into projectbuildingobjects(objectClass,typeName, declaredUnit,declaredQuantityPerUnit,materialCompounPerDeclareUnit,materialQuantityPerDeclaredUnit,canBeRecycled,canBeReused,hasPotentialDanger,requiresIndoorStorage, typeOfJoints, quantity, referenceInModel,documentation, totalQuantityOfMaterials, modelReference) values ("' + objectClass + '","' + typeName + '","' + declaredUnit + '","' + declaredQuantityPerUnit + '","' + materialCompounPerDeclareUnit + '","' + materialQuantityPerDeclaredUnit + '","' + canBeRecycled + '","' + canBeReused + '","' + hasPotentialDanger + '","' + requiresIndoorStorage + '","' + typeOfJoints + '","' + quantity + '","' + referenceInModel + '","' + documentation_image + '","' + tot_qt_str + '","' + model_reference + '") '
                 insertrec.execute(sqlquery)
 
                 counter_passed += 1
-#print(counter_passed/counter_tot)
+passed = str(counter_passed*100/counter_tot)[:4]
+print("Elements that satisfy the quantity requirements: " + passed +" %")
 db.commit()
 db.close()

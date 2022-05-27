@@ -87,6 +87,7 @@ if (isset($_POST['pr_send'])) {
     // echo $data4."<br>";
     // echo $data5."<br>";
     $preparespecification = (shell_exec("dbelementsparse.py 2>&1" . $model_py));
+    $_SESSION['persentageOfPassed'] = $preparespecification;
 ?>
 
     <script type="text/javascript">
