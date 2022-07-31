@@ -4,8 +4,10 @@ import ifcopenshell
 import ifcopenshell.util
 import ifcopenshell.util.element
 import ifcopenshell.util.selector
-
 import ifcopenshell.util.pset
+
+from telegram import send_msg
+
 ref_num = str(sys.argv[1])
 type_bld = str(sys.argv[2])
 year = str(sys.argv[3])
@@ -47,6 +49,14 @@ sqlquery = 'insert into projects(usersName,modelReferenceNumber, typeOfBuilding,
 insertrec.execute(sqlquery)
 db.commit()
 db.close()
+
+
+
+
+#text = "New project:\n" + 'https://maps.google.com/maps?q=' + latitude + ',' + longitude + '&hl=es;z=14&amp'
+text = 'New project:\nhttps://maps.google.com/maps?q={},{}&hl=es;z=14&amp'.format(latitude, longitude)
+send_msg(text)
+
 
 
 

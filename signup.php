@@ -6,12 +6,14 @@ include_once 'includes/header.php'
   <h2>Sign Up</h2>
 
   <form action="includes/signup.inc.php" method="post">
-    <input type="text" name="name" placeholder="Full name">
-    <input type="text" name="email" placeholder="Email">
-    <input type="text" name="uid" placeholder="Username">
-    <input type="password" name="pwd" placeholder="Password">
-    <input type="password" name="pwdrepeat" placeholder="Repeat password">
-    <button type="submit" name="submit">Sign Up</button>
+    <input type="text" name="name" placeholder="Full name"> <br>
+    <input type="text" name="uid" placeholder="Username"> <br>
+    <input type="text" name="company" placeholder="Company"> <br>
+    <input type="text" name="contact" placeholder="Contact"> <br>
+    <input type="text" name="email" placeholder="Email"> <br>
+    <input type="password" name="pwd" placeholder="Password"> <br>
+    <input type="password" name="pwdrepeat" placeholder="Repeat password"> <br>
+    <button type="submit" name="submit">Sign Up</button> <br>
 
   </form>
   <?php
